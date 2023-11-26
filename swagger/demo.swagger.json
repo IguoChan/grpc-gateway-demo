@@ -1,0 +1,285 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Grpc Gateway Demo",
+    "version": "1.0",
+    "x-trace-id": ""
+  },
+  "tags": [
+    {
+      "name": "Demo",
+      "description": "GRPC Demo"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/demo": {
+      "post": {
+        "summary": "添加资源",
+        "operationId": "Demo_Add",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/demopbAddResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/demopbDemoData"
+            }
+          }
+        ],
+        "tags": [
+          "Demo"
+        ]
+      }
+    },
+    "/v1/demo/{id}": {
+      "get": {
+        "summary": "获取资源",
+        "operationId": "Demo_Get",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/demopbGetResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "资源ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Demo"
+        ]
+      },
+      "delete": {
+        "summary": "删除资源",
+        "operationId": "Demo_Delete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/demopbDeleteResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "资源ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Demo"
+        ]
+      },
+      "put": {
+        "summary": "更新资源",
+        "operationId": "Demo_Update",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/demopbUpdateResp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "资源ID",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "资源"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "描述信息"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          }
+        ],
+        "tags": [
+          "Demo"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "demopbAddResp": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/demopbResult",
+          "description": "返回结果"
+        },
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "资源ID"
+        }
+      }
+    },
+    "demopbDeleteResp": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/demopbResult",
+          "description": "返回结果"
+        }
+      }
+    },
+    "demopbDemoData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "资源ID",
+          "title": "定义发送的参数\n参数类型 参数名 标识号(不可重复)"
+        },
+        "name": {
+          "type": "string",
+          "description": "资源"
+        },
+        "description": {
+          "type": "string",
+          "description": "描述信息"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "demopbGetResp": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/demopbResult",
+          "description": "返回结果"
+        },
+        "data": {
+          "$ref": "#/definitions/demopbDemoData",
+          "description": "Demo信息"
+        }
+      }
+    },
+    "demopbResult": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "返回结果码"
+        },
+        "msg": {
+          "type": "string",
+          "description": "返回结果信息"
+        }
+      }
+    },
+    "demopbUpdateResp": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/demopbResult",
+          "description": "返回结果"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

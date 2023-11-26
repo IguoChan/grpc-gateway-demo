@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package demopb;
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "grpc-gateway-demo/api/demopb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Grpc Gateway Demo";
+    version: "1.0";
+    extensions: {
+      key: "x-trace-id";
+      value {
+        string_value: "";
+      }
+    }
+  };
+  schemes: HTTP;
+};
+
+message DemoData {
+  // 定义发送的参数
+  // 参数类型 参数名 标识号(不可重复)
+  int64 id = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "资源ID"}];
+  string name = 2 [(google.api.field_behavior) = REQUIRED, (validate.rules).string = {min_len: 1, max_len: 64}, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "资源"}];
+  string description = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "描述信息"}];
+}
+
+message Result {
+  int32 code = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果码"}];
+  string msg = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果信息"}];
+}
+
+message AddResp {
+  Result result = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果"}];
+  int64 id = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "资源ID"}];
+}
+
+message DeleteReq {
+  int64 id = 1 [(google.api.field_behavior) = REQUIRED, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "资源ID"}];
+}
+
+message DeleteResp {
+  Result result = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果"}];
+}
+
+message UpdateResp {
+  Result result = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果"}];
+}
+
+message GetReq {
+  int64 id = 1 [(google.api.field_behavior) = REQUIRED, (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "资源ID"}];
+}
+
+message GetResp {
+  Result result = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "返回结果"}];
+  DemoData data = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {description: "Demo信息"}];
+}
+
+// 定义我们的服务（可定义多个服务,每个服务可定义多个接口）
+service Demo{
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    description: "GRPC Demo"
+  };
+
+  // 添加资源
+  rpc Add (DemoData) returns (AddResp){
+    option (google.api.http) = {
+      post: "/v1/demo"
+      body: "*"
+    };
+  };
+
+  // 删除资源
+  rpc Delete (DeleteReq) returns (DeleteResp){
+    option (google.api.http) = {
+      delete: "/v1/demo/{id}"
+    };
+  };
+
+  // 更新资源
+  rpc Update (DemoData) returns (UpdateResp){
+    option (google.api.http) = {
+      put: "/v1/demo/{id}"
+      body: "*"
+    };
+  };
+
+  // 获取资源
+  rpc Get (GetReq) returns (GetResp){
+    option (google.api.http) = {
+      get: "/v1/demo/{id}"
+    };
+  };
+}
